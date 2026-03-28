@@ -13,7 +13,7 @@ export default function NoteDetails({ id }: Props) {
     const { data, isLoading, isError } = useQuery({
         queryKey: ['note', id],
         queryFn: () => fetchNoteById(id),
-        refetchOnMount: false, // 🔥 ВАЖЛИВО
+        refetchOnMount: false,
     });
 
     if (isLoading) return <p>Loading note...</p>;
@@ -23,7 +23,11 @@ export default function NoteDetails({ id }: Props) {
         <div>
             <h2>{data.title}</h2>
             <p>{data.content}</p>
-            <p>{data.tag}</p>
+
+            <div>
+                <span>{data.tag}</span>
+                <p>Created: {new Date(data.createdAt).toLocaleString()}</p>
+            </div>
         </div>
     );
 }
