@@ -1,25 +1,23 @@
 
+'use client';
 
-import type { Note, NoteTag } from '../../types/note';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '@/lib/api';
+import type { NoteTag } from '@/types/note';
+
 import css from './NoteForm.module.css';
 
+interface NoteFormProps {
+    onClose: () => void;
+}
 
 interface NoteFormValues {
     title: string;
     content: string;
     tag: NoteTag;
 }
-
-
-
-interface NoteFormProps {
-    onClose: () => void;
-}
-
 
 const validationSchema = Yup.object({
     title: Yup.string().min(3).max(50).required('Required'),
@@ -31,7 +29,6 @@ const validationSchema = Yup.object({
 
 export default function NoteForm({ onClose }: NoteFormProps) {
     const queryClient = useQueryClient();
-
 
     const mutation = useMutation({
         mutationFn: createNote,
@@ -49,19 +46,17 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                 tag: 'Todo',
             }}
             validationSchema={validationSchema}
-            onSubmit={(values: Omit<Note, "id" | "createdAt" | "updatedAt">) => {
+            onSubmit={(values) => {
                 mutation.mutate(values);
             }}
         >
             <Form className={css.form}>
-                {/* TITLE */}
                 <div className={css.formGroup}>
                     <label htmlFor="title">Title</label>
                     <Field id="title" name="title" className={css.input} />
                     <ErrorMessage name="title" component="span" className={css.error} />
                 </div>
 
-                {/* CONTENT */}
                 <div className={css.formGroup}>
                     <label htmlFor="content">Content</label>
                     <Field
@@ -78,7 +73,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                     />
                 </div>
 
-                {/* TAG */}
                 <div className={css.formGroup}>
                     <label htmlFor="tag">Tag</label>
                     <Field as="select" id="tag" name="tag" className={css.select}>
@@ -91,7 +85,6 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                     <ErrorMessage name="tag" component="span" className={css.error} />
                 </div>
 
-                {/* ACTIONS */}
                 <div className={css.actions}>
                     <button
                         type="button"
@@ -113,16 +106,3 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         </Formik>
     );
 }
-
-
-<form className={css.form}>
-    <div className={css.formGroup}>
-        <label>Title</label>
-        <input className={css.input} />
-    </div>
-
-    <div className={css.actions}>
-        <button className={css.cancelButton}>Cancel</button>
-        <button className={css.submitButton}>Create</button>
-    </div>
-</form>

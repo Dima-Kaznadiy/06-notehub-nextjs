@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +13,7 @@ export default function NoteDetails({ id }: Props) {
     const { data, isLoading, isError } = useQuery({
         queryKey: ['note', id],
         queryFn: () => fetchNoteById(id),
+        refetchOnMount: false, // 🔥 ВАЖЛИВО
     });
 
     if (isLoading) return <p>Loading note...</p>;
